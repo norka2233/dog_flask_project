@@ -1,0 +1,16 @@
+<!doctype html>
+
+<html>
+    <head>
+        {% if title %}
+        <title> {{ title }} - Dog Flask Project </title>
+        {% else %}
+        <title> Welcome, this is Dog Flask Project </title>
+        {% endif %}
+    </head>
+    <body>
+        <div>Dog Flask Project: <a href="/index">Homepage</a></div>
+        <hr>
+            {% block content %}{% endblock %}
+    </body>
+</html>
