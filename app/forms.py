@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import ValidationError, DataRequired, Email,EqualTo
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import DogUser
 
 
@@ -28,3 +28,9 @@ class RegistrationForm(FlaskForm):
         dog_user = DogUser.query.filter_by(email=email.data).first()
         if dog_user is not None:
             raise ValidationError('This email is not correct.')
+
+
+class EditProfileForm(FlaskForm):
+    dog_name = StringField('Dog_name', validators=[DataRequired()])
+    about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
+    submit = SubmitField('Submit')
