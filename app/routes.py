@@ -87,7 +87,7 @@ def dog_user(dog_name):
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    form = EditProfileForm()
+    form = EditProfileForm(current_user.dog_name)
     if form.validate_on_submit():
         current_user.dog_name = form.dog_name.data
         current_user.about_me = form.about_me.data

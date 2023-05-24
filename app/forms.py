@@ -34,3 +34,13 @@ class EditProfileForm(FlaskForm):
     dog_name = StringField('Dog_name', validators=[DataRequired()])
     about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
     submit = SubmitField('Submit')
+
+    def __init__(self, original_dog_name, *args, **kwargs):
+        super(EditProfileForm, self).__init__(*args, **kwargs)
+        self.original_dog_name = original_dog_name
+
+    def validate_dog_name(self, dog_name):
+        if dog_name.data != self.original_dog_name:
+            dog_user = DogUser.query.filter_by(dog_name=self.dog_name.data).first()
+            if dog_user is not None:
+                raise ValidationError('Please use a different Dog name.')
