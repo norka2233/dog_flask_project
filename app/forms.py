@@ -44,3 +44,7 @@ class EditProfileForm(FlaskForm):
             dog_user = DogUser.query.filter_by(dog_name=self.dog_name.data).first()
             if dog_user is not None:
                 raise ValidationError('Please use a different Dog name.')
+
+
+class EmptyForm(FlaskForm):
+    submit = SubmitField('Submit')

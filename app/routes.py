@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm
 from app.models import DogUser
 
 
@@ -81,7 +81,8 @@ def dog_user(dog_name):
         {'author': dog_user, 'body': 'Test post #1'},
         {'author': dog_user, 'body': 'Test post #2'}
     ]
-    return render_template('dog_user.html', dog_user=dog_user, posts=posts)
+    form = EmptyForm()
+    return render_template('dog_user.html', dog_user=dog_user, posts=posts, form=form)
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -98,3 +99,43 @@ def edit_profile():
         form.dog_name.data = current_user.dog_name
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile', form=form)
+
+
+@app.route('/follow/<dog_name>', methods=['POST'])
+@login_required
+def follow(dog_name):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        dog_user = DogUser.query.filter_by(dog_name=dog_name).first()
+        if dog_user is None:
+            flash(f'Dog user {dog_name} not found.')
+            return redirect(url_for('index'))
+        if dog_user == current_user:
+            flash('You cannot follow yourself!')
+            return redirect(url_for('dog_user', dog_name=dog_name))
+        current_user.follow(dog_user)
+        db.session.commit()
+        flash(f'You are following {dog_name} now.')
+        return redirect(url_for('dog_user', dog_name=dog_name))
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/unfollow/<dog_name>', methods=['POST'])
+@login_required
+def unfollow(dog_name):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        dog_user = DogUser.query.filter_by(dog_name=dog_name).first()
+        if dog_user is None:
+            flash(f'Dog user {dog_name} not found.')
+            return redirect(url_for('index'))
+        if dog_user == current_user:
+            flash('You cannot unfollow yourself!')
+            return redirect(url_for('dog_user', dog_name=dog_name))
+        current_user.unfollow(dog_user)
+        db.session.commit()
+        flash(f'You are not following {dog_name} anymore.')
+        return redirect(url_for('dog_user', dog_name=dog_name))
+    else:
+        return redirect(url_for('index'))
