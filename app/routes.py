@@ -81,12 +81,16 @@ def dog_user(dog_name):
     # from pdb import set_trace
     # set_trace()
     dog_user = DogUser.query.filter_by(dog_name=dog_name).first_or_404()
-    posts = [
-        {'author': dog_user, 'body': 'Test post #1'},
-        {'author': dog_user, 'body': 'Test post #2'}
-    ]
+    page = request.args.get('page', 1, type=int)
+    posts = dog_user.posts.order_by(Post.timestamp.desc()).paginate(
+        page=page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
+    next_url = url_for('dog_user', dog_name=dog_user.dog_name, page=posts.next_num) \
+        if posts.has_next else None
+    prev_url = url_for('dog_user', dog_name=dog_user.dog_name, page=posts.prev_num) \
+        if posts.has_prev else None
     form = EmptyForm()
-    return render_template('dog_user.html', dog_user=dog_user, posts=posts, form=form)
+    return render_template('dog_user.html', dog_user=dog_user, posts=posts.items,
+                           next_url=next_url, prev_url=prev_url, form=form)
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
