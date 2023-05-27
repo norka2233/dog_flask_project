@@ -3,8 +3,8 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm
-from app.models import DogUser
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm, PostForm
+from app.models import DogUser, Post
 
 
 @app.before_request
@@ -14,22 +14,19 @@ def before_request():
         db.session.commit()
 
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    dog_user = {'username': 'Shnurok'}
-    posts = [
-        {
-            'author': {'username': 'Groshyk'},
-            'body': 'Hi everyone!'
-        },
-        {
-            'author': {'username': 'Shkedryk'},
-            'body': 'Hi dogs!'
-        }
-    ]
-    return render_template('index.html', title='Homepage', posts=posts)
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+        return redirect(url_for('index'))
+    posts = current_user.followed_posts().all()
+    return render_template('index.html', title='Homepage', form=form, posts=posts)
 
 
 @app.route('/login', methods=['GET', 'POST'])
