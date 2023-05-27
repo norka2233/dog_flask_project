@@ -11,12 +11,13 @@
     <body>
         <div>
             Dog Flask Project:
-                <a href="{{ url_for('index')}}"> Homepage </a>
+                <a href="{{ url_for('index') }}"> Homepage </a>
+                <a href="{{ url_for('explore') }}"> Explore </a>
             {% if current_user.is_anonymous %}
-                <a href="{{ url_for('login')}}"> Login </a>
+                <a href="{{ url_for('login') }}"> Login </a>
             {% else %}
-                <a href="{{ url_for ('dog_user', dog_name=current_user.dog_name) }}"> Profile </a>
-                <a href="{{ url_for ('logout') }}"> Logout </a>
+                <a href="{{ url_for('dog_user', dog_name=current_user.dog_name) }}"> Profile </a>
+                <a href="{{ url_for('logout') }}"> Logout </a>
             {% endif %}
         </div>
         <hr>
