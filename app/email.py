@@ -13,7 +13,7 @@ def send_email(subject, sender, recipients, text_body, html_body):
 def send_password_reset_email(dog_user):
     token = dog_user.get_reset_password_token()
     send_email('[DogFlaskProject] Reset Your Password',
-               sender=app.config['ADMINS'[0]],
+               sender=app.config['ADMINS'][0],
                recipients=[dog_user.email],
                text_body=render_template('email/reset_password.txt',
                                          dog_user=dog_user, token=token),
