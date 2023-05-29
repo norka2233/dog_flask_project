@@ -6,8 +6,12 @@
         <td width="256px"><img src="{{ dog_user.avatar(256) }}"></td>
         <td>
             <h1>Dog User: {{ dog_user.dog_name }}</h1>
-            {% if dog_user.about_me %}<p>{{ dog_user.about_me }}</p>{% endif %}
-            {% if dog_user.last_seen %}<p>Last seen on: {{ dog_user.last_seen }}</p>{% endif %}
+            {% if dog_user.about_me %}
+                <p>{{ dog_user.about_me }}</p>
+            {% endif %}
+            {% if dog_user.last_seen %}
+                <p>Last seen on: {{ moment(dog_user.last_seen).format('LLL') }}</p>
+            {% endif %}
             <p>{{ dog_user.followers.count() }} followers, {{ dog_user.followed.count() }} following.</p>
             {% if dog_user == current_user %}
             <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
