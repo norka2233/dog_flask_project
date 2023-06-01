@@ -19,12 +19,14 @@ idna==3.4
 importlib-metadata==6.6.0
 itsdangerous==2.1.2
 Jinja2==3.1.2
+langdetect==1.0.9
 Mako==1.2.4
 MarkupSafe==2.1.2
 packaging==23.1
 PyJWT==2.7.0
 python-dotenv==1.0.0
 pytz==2023.3
+six==1.16.0
 SQLAlchemy==2.0.13
 typing_extensions==4.5.0
 visitor==0.1.3
