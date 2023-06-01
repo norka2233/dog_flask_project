@@ -3,3 +3,5 @@
 **/migrations/**
 app.db
 /logs
+messages.pot
+translations

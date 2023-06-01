@@ -33,4 +33,8 @@ You should see environment activated by having venv name in command prompt windo
 ### Enjoy the app!
 
 
+13 chapter
+pybabel extract -F babel.cfg -k _l -o messages.pot .
+
+
 
