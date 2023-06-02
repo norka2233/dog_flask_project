@@ -2,6 +2,6 @@
 .idea
 **/migrations/**
 app.db
-/logs
+**/logs/**
 messages.pot
 translations
