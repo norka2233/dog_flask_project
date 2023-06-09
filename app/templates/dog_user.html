@@ -15,17 +15,17 @@
             <p>{{ _('%(count)d followers', count=dog_user.followers.count()) }},
                 {{ _('%(count)d following', count=dog_user.followed.count()) }} </p>
             {% if dog_user == current_user %}
-                <p><a href="{{ url_for('edit_profile') }}">{{ _('Edit your profile') }}</a></p>
+                <p><a href="{{ url_for('main.edit_profile') }}">{{ _('Edit your profile') }}</a></p>
             {% elif not current_user.is_following(dog_user) %}
             <p>
-            <form action="{{ url_for('follow', dog_name=dog_user.dog_name) }}" method="post">
+            <form action="{{ url_for('main.follow', dog_name=dog_user.dog_name) }}" method="post">
                 {{ form.hidden_tag() }}
                 {{ form.submit(value=_('Follow'), class_='btn btn-default') }}
             </form>
             </p>
             {% else %}
             <p>
-            <form action="{{ url_for('unfollow', dog_name=dog_user.dog_name) }}" method="post">
+            <form action="{{ url_for('main.unfollow', dog_name=dog_user.dog_name) }}" method="post">
                 {{ form.hidden_tag() }}
                 {{ form.submit(value=_('Unfollow'), class_='btn btn-default') }}
             </form>
