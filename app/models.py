@@ -9,7 +9,6 @@ from hashlib import md5
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-
 followers = db.Table('followers',
                      db.Column('follower_id', db.Integer, db.ForeignKey('dog_user.id')),
                      db.Column('followed_id', db.Integer, db.ForeignKey('dog_user.id'))
