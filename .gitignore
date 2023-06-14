@@ -6,3 +6,4 @@ app.db
 messages.pot
 translations
 **/.DS_Store
+**/private_key/**
