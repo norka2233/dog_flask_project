@@ -23,7 +23,18 @@ You should see environment activated by having venv name in command prompt windo
 
 `$ (venv) flask run`
 
+###5. To create and run app with data the database is needed. Run: 
+
+`flask db init`
+
+`flask db migrate`
+
+`flask db upgrade`
 ### Enjoy the app!
+
+
+13 chapter
+pybabel extract -F babel.cfg -k _l -o messages.pot .
 
 
 
