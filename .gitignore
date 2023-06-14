@@ -5,3 +5,4 @@ app.db
 **/logs/**
 messages.pot
 translations
+**/.DS_Store
