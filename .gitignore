@@ -7,3 +7,4 @@ messages.pot
 translations
 **/.DS_Store
 .vagrant
+**/private_key/**
