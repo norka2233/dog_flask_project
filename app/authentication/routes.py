@@ -19,7 +19,7 @@ def login():
         dog_user = DogUser.query.filter_by(dog_name=form.dog_name.data).first()
         if dog_user is None or not dog_user.check_password(form.password.data):
             flash(_('Invalid username or password'))
-            return redirect(url_for('login'))
+            return redirect(url_for('auth.login'))
         login_user(dog_user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
@@ -45,8 +45,8 @@ def register():
         db.session.add(dog_user)
         db.session.commit()
         flash(_('Congrats, the dog_user is registered now!'))
-        return redirect(url_for('authentication.login'))
-    return render_template('authentication.register.html', title=_('Register'), form=form)
+        return redirect(url_for('auth.login'))
+    return render_template('authentication/register.html', title=_('Register'), form=form)
 
 
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
