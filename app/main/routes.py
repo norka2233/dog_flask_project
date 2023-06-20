@@ -107,7 +107,7 @@ def follow(dog_name):
             return redirect(url_for('dog_user', dog_name=dog_name))
         current_user.follow(dog_user)
         db.session.commit()
-        flash(_(f'You are following %{dog_name}s now.', dog_name=dog_name))
+        flash(_('You are following %(dog_name)s!', dog_name=dog_name))
         return redirect(url_for('main.dog_user', dog_name=dog_name))
     else:
         return redirect(url_for('main.index'))
@@ -127,7 +127,7 @@ def unfollow(dog_name):
             return redirect(url_for('main.dog_user', dog_name=dog_name))
         current_user.unfollow(dog_user)
         db.session.commit()
-        flash(_(f'You are not following %{dog_name}s anymore.,', dog_name=dog_name))
+        flash(_('You are not following %(dog_name)s.', dog_name=dog_name))
         return redirect(url_for('main.dog_user', dog_name=dog_name))
     else:
         return redirect(url_for('main.index'))
