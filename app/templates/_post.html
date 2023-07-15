@@ -6,12 +6,15 @@
             </a>
         </td>
         <td>
-            {% set user_link %}
+            {% set dog_user_link %}
+            <span>
                 <a href="{{ url_for('main.dog_user', dog_name=post.author.dog_name) }}">
-                {{ post.author.dog_name }}
+                    {{ post.author.dog_name }}
                 </a>
+            </span>
             {% endset %}
-            {{ _('%(dog_name)s said %(when)s', dog_name=user_link,
+
+            {{ _('%(dog_name)s said %(when)s', dog_name=dog_user_link,
             when=moment(post.timestamp).fromNow()) }}
             <br>
             <span id="post{{ post.id }}"> {{ post.body }} </span>
