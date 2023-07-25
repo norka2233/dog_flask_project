@@ -77,6 +77,14 @@ def dog_user(dog_name):
                            next_url=next_url, prev_url=prev_url, form=form)
 
 
+@bp.route('/user/<dog_name>/popup')
+@login_required
+def dog_user_popup(dog_name):
+    dog_user = DogUser.query.filter_by(dog_name=dog_name).first_or_404()
+    form = EmptyForm()
+    return render_template('dog_user_popup.html', dog_user=dog_user, form=form)
+
+
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
