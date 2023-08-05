@@ -31,11 +31,19 @@
             </form>
             </p>
             {% endif %}
+            {% if dog_user != current_user %}
+                <p>
+                    <a href="{{ url_for('main.send_message',
+                                            recipient=dog_user.dog_name) }}">
+                        {{ _('Send private message') }}
+                    </a>
+                </p>
+            {% endif %}
         </td>
     </tr>
 </table>
 {% for post in posts %}
-{% include '_post.html' %}
+    {% include '_post.html' %}
 {% endfor %}
 <nav aria-label="...">
     <ul class="pager">
