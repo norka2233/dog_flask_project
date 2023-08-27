@@ -8,3 +8,4 @@ translations
 **/.DS_Store
 **/private_key/**
 .vagrant
+dump.rdb

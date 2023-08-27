@@ -1,4 +1,7 @@
 import json
+import redis
+import rq
+
 from time import time
 from datetime import datetime
 from hashlib import md5
@@ -35,6 +38,7 @@ class DogUser(UserMixin, db.Model):
                                         backref='recipient', lazy='dynamic')
     last_message_read_time = db.Column(db.DateTime)
     notifications = db.relationship('Notification', backref='dog_user', lazy='dynamic')
+    tasks = db.relationship('Task', backref='dog_user', lazy='dynamic')
 
     def __repr__(self):
         return f'<Dog User {self.dog_name}>'
@@ -93,6 +97,18 @@ class DogUser(UserMixin, db.Model):
         db.session.add(n)
         return n
 
+    def launch_task(self, name, description, *args, **kwargs):
+        rq_job = current_app.task_queue.enqueue('app.tasks.' + name, self.id, *args, **kwargs)
+        task = Task(id=rq_job.get_id(), name=name, description=description, dog_user=self)
+        db.session.add(task)
+        return task
+
+    def get_tasks_in_progress(self):
+        return Task.query.filter_by(dog_user=self, complete=False).all()
+
+    def get_task_in_progress(self, name):
+        return Task.query.filter_by(name=name,dog_user=self, complete=False).first()
+
 
 @login.user_loader
 def load_dog_user(id):
@@ -128,5 +144,25 @@ class Notification(db.Model):
     timestamp = db.Column(db.Float, index=True, default=time)
     payload_json = db.Column(db.Text)
 
-    def ger_data(self):
+    def get_data(self):
         return json.loads(str(self.payload_json))
+
+
+class Task(db.Model):
+    id = db.Column(db.String(36), primary_key=True)
+    name = db.Column(db.String(128), index=True)
+    description = db.Column(db.String(128))
+    dog_user_id = db.Column(db.Integer, db.ForeignKey('dog_user.id'))
+    complete = db.Column(db.Boolean, default=False)
+
+    def get_rq_job(self):
+        try:
+            rq_job = rq.job.Job.fetch(self.id, connection=current_app.redis)
+        except (redis.exceptions.RedisError, rq.exceptions.NoSuchJobError):
+            return None
+        return rq_job
+
+    def get_progress(self):
+        job = self.get_rq_job()
+        return job.meta.get('progress', 0) if job is not None else 100
+
