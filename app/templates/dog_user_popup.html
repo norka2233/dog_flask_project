@@ -1,0 +1,41 @@
+<table class="table">
+    <tr>
+        <td width="64" style="border: 0px;"><img src="{{ dog_user.avatar(64)}}"></td>
+        <td style="border: 0px;">
+            <p><a href="{{ url_for('main.dog_user', dog_name=dog_user.dog_name) }}">
+                {{ dog_user.dog_name }}
+            </a></p>
+            <small>
+                {% if dog_user.about_me %}<p>{{ dog_user.about_me }}</p>{% endif %}
+                {% if dog_user.last_seen %}
+                <p>{{ _('Last seen on') }}: {{ moment(dog_user.last_seen).format('lll') }}</p>
+                {% endif %}
+                <p>
+                    {{ _('%(count)d followers', count=dog_user.followers.count()) }},
+                    {{ _('%(count)d following', count=dog_user.followed.count()) }}
+                </p>
+                {% if dog_user != current_user %}
+                    {% if not current_user.is_following(dog_user) %}
+                <p>
+                    <form action="{{ url_for('main.follow', dog_name=dog_user.dog_name) }}"
+                          method="post">
+                        {{ form.hidden_tag() }}
+                        {{ form.submit(value=_('Follow'),
+                        class_='btn btn-default btn-sm') }}
+                    </form>
+                </p>
+                {% else %}
+                <p>
+                <form action="{{ url_for('main.unfollow', dog_name=dog_user.dog_name) }}"
+                      method="post">
+                    {{ form.hidden_tag() }}
+                    {{ form.submit(value=_('Unfollow'),
+                    class_='btn btn-default btm-sm') }}
+                </form>
+                </p>
+                {% endif %}
+            {% endif %}
+            </small>
+        </td>
+    </tr>
+</table>
